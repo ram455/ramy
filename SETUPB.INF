@@ -1,0 +1,58 @@
+;; **********************************************************************
+;; *									*
+;; *   Installer for 3D Home Architect. Script by Chris Bohn 10/8/93.	*
+;; *									*
+;; **********************************************************************
+SetDefaultBitmap off
+ShowWindow Maximize
+SetCustomControls off
+SetBackdrop off
+SetBackgroundColor 255 255 255 255 255 255
+SetTopLineTo "3D Home Architect Installation"
+SetScreenAttrTo BlackOnWhite  ;; no effect!!!
+SetPopupAttrTo BlackOnWhite
+SetAttentionAttrTo RedOnWhite
+SetReplacementInquiry off
+QueFiles to ShadowDirectory
+3dhome.bmp
+EndQueFiles
+GetQuedFiles Quietly
+SetReplacementInquiry on
+LoadBitMap 1 ShadowDirectory\3dhome.bmp
+ShowBitMap 1 
+Dialog
+Welcome to the installer for 3D Home Architect. If at any 
+time you wish to cancel the installation, press the Esc key. 
+EndDialog
+:DirInq
+DetermineInstallationDirectory C:\3DHOME 7000000 DisallowInadequate
+If Escaped
+	Goto DirInq
+EndIf
+If FileExists [InstallationDirectory]\3dhome.exe
+	Dialog [YesOrNo1]
+		A version of 3D Home Architect already exists in the 
+		destination directory on your computer. Do you want to be
+		prompted before each file is overwritten? (If you wish to
+		cancel the installation, press the Esc key).
+	EndDialog
+	If [YesOrNo1] = N
+		SetReplacementInquiry off
+	EndIf
+EndIf
+QueFileGroup 1 to [InstallationDirectory]
+GetQuedFiles
+QueFileGroup 2 to [InstallationDirectory]\samples\homes
+GetQuedFiles
+QueFileGroup 3 to [InstallationDirectory]\samples\remodels
+GetQuedFiles
+BuildProgramGroup "3D Home Architect" 3DHOME.GRP
+ [INSTALLATIONDIRECTORY]\3dhome.exe "3D Home Architect" [INSTALLATIONDIRECTORY]\3dhome.exe
+ [INSTALLATIONDIRECTORY]\readme.wri  "Read Me"  [INSTALLATIONDIRECTORY]\readme.wri
+EndBuildProgramGroup
+DeleteFiles from ShadowDirectory Quietly
+3dhome.bmp
+EndDeleteFiles
+Dialog
+Installation complete!
+EndDialog
